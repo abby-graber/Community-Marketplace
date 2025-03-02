@@ -36,3 +36,16 @@ button {
 button:hover {
     background-color: #163152;
 }
+
+.styled-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #163152;
+    border-radius: 5px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.styled-input:focus {
+    border-color: #163152;
+}

@@ -1,14 +1,18 @@
-from flask import Flask, render_template
-from flask_mysqldb import MySQL
+from flask import Flask, render_template # type: ignore
+from flask_mysqldb import MySQL # type: ignore
 import config
 
-app = Flask(__name__)
+from routes.address import address_bp  # Import the blueprint
 
+app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = config.MYSQL_CONFIG['host']
 app.config['MYSQL_USER'] = config.MYSQL_CONFIG['user']
 app.config['MYSQL_PASSWORD'] = config.MYSQL_CONFIG['password']
 app.config['MYSQL_DB'] = config.MYSQL_CONFIG['database']
+
+# Register the Blueprint
+app.register_blueprint(address_bp, url_prefix="/address")
 
 mysql = MySQL(app)
 
