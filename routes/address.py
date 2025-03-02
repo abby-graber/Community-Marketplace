@@ -6,12 +6,11 @@ address_bp = Blueprint("address", __name__, template_folder="../templates")
 
 @address_bp.route("/", methods=["GET"])
 def address_page():
-    """Render the address search page."""
     return render_template("address.html")
 
 @address_bp.route("/search_address", methods=["GET"])
 def search_address():
-    """Get address suggestions from OpenStreetMap (Nominatim API)."""
+    """Get address suggestions from OpenStreetMap"""
     query = request.args.get("query")
     if not query:
         return jsonify({"error": "Missing query parameter"}), 400
@@ -30,3 +29,4 @@ def search_address():
         return jsonify(response.json())
     
     return jsonify({"error": "Failed to fetch data"}), 500
+

@@ -2,7 +2,9 @@ from flask import Flask, render_template # type: ignore
 from flask_mysqldb import MySQL # type: ignore
 import config
 
-from routes.address import address_bp  # Import the blueprint
+# Import blueprints
+from routes.address import address_bp
+from routes.date_time import date_time_bp
 
 app = Flask(__name__)
 
@@ -11,8 +13,9 @@ app.config['MYSQL_USER'] = config.MYSQL_CONFIG['user']
 app.config['MYSQL_PASSWORD'] = config.MYSQL_CONFIG['password']
 app.config['MYSQL_DB'] = config.MYSQL_CONFIG['database']
 
-# Register the Blueprint
+# Register blueprints
 app.register_blueprint(address_bp, url_prefix="/address")
+app.register_blueprint(date_time_bp, url_prefix="/date-time")
 
 mysql = MySQL(app)
 

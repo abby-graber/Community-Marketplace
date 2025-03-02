@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Address Search</title>
+    <title>Schedule a Meeting</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
@@ -13,36 +13,59 @@
     <!-- Main Content -->
     <div class="container">
         <h1>Search for an Address</h1>
-        <input type="text" id="addressInput" class="styled-input" placeholder="Start typing an address...">
-        <div id="suggestions"></div>
+        <input type="text" id="addressInput" class="styled-input" placeholder="Start typing an address..." style="width: 600px;">
+        <div id="suggestions" style="width: 600px;"></div> 
     </div>
 
     <script>
-        async function getAddressSuggestions(query) {
-            if (query.length < 3) return; // Avoid unnecessary requests for short queries
-            
-            let url = `/address/search_address?query=${encodeURIComponent(query)}`;
-            let response = await fetch(url);
-            let data = await response.json();
-
-            let suggestions = document.getElementById("suggestions");
-            suggestions.innerHTML = "";
-
-            data.forEach(item => {
-                let div = document.createElement("div");
-                div.classList.add("suggestion-item");
-                div.innerText = item.display_name;
-                div.onclick = () => {
-                    document.getElementById("addressInput").value = item.display_name;
-                    suggestions.innerHTML = "";
-                };
-                suggestions.appendChild(div);
-            });
-        }
-
         document.getElementById("addressInput").addEventListener("input", (e) => {
             getAddressSuggestions(e.target.value);
         });
+
+        async function getAddressSuggestions(query) {
+            if (query.length < 3) {
+                document.getElementById("suggestions").style.display = "none";
+                return;
+            }
+
+            try {
+                let url = `/address/search_address?query=${encodeURIComponent(query)}`;
+                let response = await fetch(url);
+
+                if (!response.ok) {
+                    console.error("Error fetching address suggestions:", response.statusText);
+                    return;
+                }
+
+                let data = await response.json();
+                let suggestions = document.getElementById("suggestions");
+                suggestions.innerHTML = "";
+
+                if (data.length === 0) {
+                    suggestions.style.display = "none";
+                    return;
+                }
+
+                data.forEach(item => {
+                    let div = document.createElement("div");
+                    div.classList.add("suggestion-item");
+                    div.innerText = item.display_name;
+                    div.onclick = () => {
+                        // Store the selected address
+                        document.getElementById("addressInput").value = item.display_name;
+                        suggestions.style.display = "none";
+
+                        // Redirect to the new page for date and time selection
+                        window.location.href = `/date-time/set-date-time?address=${encodeURIComponent(item.display_name)}`;
+                    };
+                    suggestions.appendChild(div);
+                });
+
+                suggestions.style.display = "block"; // Show dropdown if suggestions exist
+            } catch (error) {
+                console.error("Request failed:", error);
+            }
+        }
     </script>
 </body>
 </html>
