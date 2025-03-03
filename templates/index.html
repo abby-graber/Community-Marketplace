@@ -1,41 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Listing</title>
+    <title>Community Marketplace</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h2>Create a Listing</h2>
-    <form action="{{ url_for('listings.create_listing') }}" method="POST" enctype="multipart/form-data">
 
-        
-        <label for="seller_id">Seller ID:</label>
-        <input type="number" id="seller_id" name="seller_id" required>
+    <header>
+        Community Marketplace - Buy, Sell, Trade
+    </header>
 
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" required>
+    <div class="container">
+        <h1>Welcome to Community Marketplace</h1>
+        <p>List your items, explore, and connect with others.</p>
+        <button>Get Started</button>
+        <a href="{{ url_for('listings.create_listing_page') }}"><button>Create Listing</button></a> 
+    </div>
 
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" required>
-
-        <label for="category">Category:</label>
-        <select id="category" name="category" required>
-            <option value="electronics">Electronics</option>
-            <option value="furniture">Furniture</option>
-            <option value="clothing">Clothing</option>
-            <option value="other">Other</option>
-        </select>
-
-        <label for="image">Upload Image:</label>
-        <input type="file" id="image" name="image" accept="image/*" required>
-
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" rows="4" required></textarea>
-
-        <button type="submit">Post</button>
-        <button type="reset">Clear</button>
-    </form>
 </body>
 </html>
