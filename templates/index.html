@@ -15,6 +15,13 @@
         <p>List your items, explore, and connect with others.</p>
         <button>Get Started</button>
         <a href="{{ url_for('listings.create_listing_page') }}"><button>Create Listing</button></a> 
+        {% if 'logged_in' in session %}
+        <p>Welcome, {{ session['username'] }}! You are logged in.</p>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+        <a href="{{ url_for('register') }}">Create Account</a>
     </div>
 
 </body>

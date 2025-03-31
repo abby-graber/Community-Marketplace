@@ -42,9 +42,10 @@
                 suggestions.innerHTML = "";
 
                 if (data.length === 0) {
-                    suggestions.style.display = "none";
-                    return;
-                }
+                showError("Invalid or unknown location. Please try again.");
+                suggestions.style.display = "none";
+                return;
+            }
 
                 data.forEach(item => {
                     let div = document.createElement("div");

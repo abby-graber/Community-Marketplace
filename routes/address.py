@@ -26,7 +26,12 @@ def search_address():
     response = requests.get(url, params=params, headers=headers)
     
     if response.status_code == 200:
-        return jsonify(response.json())
+        results = response.json()
+    
+        if not results:
+            return jsonify({"error": "Invalid or unknown location. Please try again."}), 404
+        
+        return jsonify(results)
     
     return jsonify({"error": "Failed to fetch data"}), 500
 

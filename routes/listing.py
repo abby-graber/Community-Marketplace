@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
 import os
 from werkzeug.utils import secure_filename
@@ -12,10 +12,27 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
+def login_required(f):
+    def wrap(*args, **kwargs):
+        if 'logged_in' not in session:
+            flash('You need to login first.', 'warning')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    wrap.__name__ = f.__name__
+    return wrap
+
+
 @listings_bp.route('/create-listing', methods=['GET', 'POST'])
+@login_required
 def create_listing_page():
     if request.method == 'POST':
-        seller_id = request.form['seller_id']
+        seller_id = session.get('user_id')
+
+        if not seller_id:
+            flash('Error: Please log in.')
+            return redirect(url_for('login'))
+
         title = request.form['title']
         price = request.form['price']
         category = request.form['category']
