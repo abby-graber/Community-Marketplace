@@ -13,7 +13,10 @@
     <!-- Main Content -->
     <div class="container">
         <h1>Search for an Address</h1>
-        <input type="text" id="addressInput" class="styled-input" placeholder="Start typing an address..." style="width: 600px;">
+        <form action="{{ url_for('address.address_page') }}" method="GET">
+            <input type="text" id="addressInput" name="query" class="styled-input" placeholder="Start typing an address..." style="width: 600px;">
+            <button type="submit">Search</button>
+        </form>
         <div id="suggestions" style="width: 600px;"></div> 
     </div>
 
@@ -23,13 +26,14 @@
         });
 
         async function getAddressSuggestions(query) {
-            if (query.length < 3) {
+            if (!query || query.length < 3) {
                 document.getElementById("suggestions").style.display = "none";
                 return;
             }
 
             try {
                 let url = `/address/search_address?query=${encodeURIComponent(query)}`;
+                console.log("Fetching URL:", url); // Debugging
                 let response = await fetch(url);
 
                 if (!response.ok) {
@@ -42,27 +46,24 @@
                 suggestions.innerHTML = "";
 
                 if (data.length === 0) {
-                showError("Invalid or unknown location. Please try again.");
-                suggestions.style.display = "none";
-                return;
-            }
+                    console.error("Invalid or unknown location.");
+                    suggestions.style.display = "none";
+                    return;
+                }
 
                 data.forEach(item => {
                     let div = document.createElement("div");
                     div.classList.add("suggestion-item");
                     div.innerText = item.display_name;
                     div.onclick = () => {
-                        // Store the selected address
                         document.getElementById("addressInput").value = item.display_name;
                         suggestions.style.display = "none";
-
-                        // Redirect to the new page for date and time selection
                         window.location.href = `/date-time/set-date-time?address=${encodeURIComponent(item.display_name)}`;
                     };
                     suggestions.appendChild(div);
                 });
 
-                suggestions.style.display = "block"; // Show dropdown if suggestions exist
+                suggestions.style.display = "block";
             } catch (error) {
                 console.error("Request failed:", error);
             }

@@ -8,6 +8,15 @@
 
     <header>
         Community Marketplace - Buy, Sell, Trade
+        <button class="menu-btn" onclick="toggleMenu()"> <div></div> <div></div> <div></div> </button>
+        <div class="side-menu" id="sideMenu">
+            <a href="{{ url_for('listings.create_listing_page') }}">Create Listing</a>
+            <a href="{{ url_for('address.address_page') }}">Schedule a Meeting</a>
+            <!-- Add more links to other services -->
+            <a href="#">Services</a>
+            <a href="#">Contact</a>
+            <a href="#" class="close-btn" onclick="toggleMenu()">&times;</a>
+        </div>
     </header>
 
     <div class="container">
@@ -23,6 +32,17 @@
         {% endif %}
         <a href="{{ url_for('register') }}">Create Account</a>
     </div>
+
+    <script>
+        function toggleMenu() {
+            let menu = document.getElementById("sideMenu");
+            if(menu.style.width === "250px") {
+                menu.style.width = "0";
+            } else {
+                menu.style.width = "250px";
+            }
+        }
+    </script>
 
 </body>
 </html>
