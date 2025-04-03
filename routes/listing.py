@@ -59,3 +59,16 @@ def create_listing_page():
         return jsonify({'message': 'Listing created successfully'}), 201
 
     return render_template('create_listing.html')
+
+
+@listings_bp.route('/my-listings', methods=['GET'])
+@login_required
+def my_listings():
+    seller_id = session.get('user_id')
+
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT id, title, price, category, description, image_url FROM listings WHERE seller_id = %s", (seller_id,))
+    listings = cursor.fetchall()
+    cursor.close()
+
+    return render_template('my_listings.html', listings=listings)
