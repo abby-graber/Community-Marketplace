@@ -58,7 +58,6 @@ button:hover {
 }
 
 #suggestions {
-    position: relative;
     width: 100%;
     max-height: 200px; /* Set max height */
     overflow-y: auto; /* Enable scrolling */
@@ -92,15 +91,19 @@ button:hover {
     overflow-x: hidden;
     transition: 0.3s;
     padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .side-menu a {
-    padding: 30px 20px;
+    padding: 20px 20px;
     text-decoration: none;
     font-size: 20px;
     color: #163152;
     display: block;
-    transition: 0.3s;
+    transition: 0.5s;
 }
 
 .side-menu a:hover {
@@ -108,14 +111,15 @@ button:hover {
 }
 
 .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 20px;
+    height: 30px;
+    width: 35px;
     font-size: 30px;
     color: #163152;
     cursor: pointer;
     text-decoration: none;
     border-radius: 5px;
+    padding: 0;
+    transition: 0.5s;
 }
 
 .menu-btn {
@@ -137,5 +141,21 @@ button:hover {
     height: 5px;
     background-color: white;
     border-radius: 5px;
+}
+
+.flash-messages {
+    margin: 1em auto;
+    width: 80%;
+}
+
+.alert {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
 }
 

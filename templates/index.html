@@ -9,14 +9,13 @@
     <!-- Header -->
     <header>
         Community Marketplace - Buy, Sell, Trade
+        <!-- Hamburger Menu Button -->
+        <button class="menu-btn" onclick="openMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </button>
     </header>
-
-    <!-- Hamburger Menu Button -->
-    <button class="menu-btn" onclick="openMenu()">
-        <div></div>
-        <div></div>
-        <div></div>
-    </button>
 
     <!-- Sidebar Menu -->
     <div id="sideMenu" class="side-menu">
@@ -25,6 +24,8 @@
         <a href="{{ url_for('login') }}">Login</a>
         <a href="{{ url_for('register') }}">Register</a>
         <a href="{{ url_for('listings.my_listings') }}">My Listings</a>
+        <a href="{{ url_for('address.address_page') }}">Schedule a Meeting</a>
+        <a href="{{ url_for('my_meetings.my_meetings_page') }}">My Meetings</a>
     </div>
 
     <div class="container">

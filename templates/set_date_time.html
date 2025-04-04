@@ -10,20 +10,18 @@
     </header>
 
     <div class="container">
-        <form method="POST">
+        <form method="POST" >
+            <h2>Location: {{ address }}</h2>
             <label for="date">Select Date:</label>
-            <input type="date" id="date" name="date" required>
-            <br>
-
-            <label for="time">Select Time:</label>
-            <input type="time" id="time" name="time" required>
+            <input type="date" id="date" name="date" value="{{ date or ''}}" required>
             <br><br>
 
-            <button type="submit">Set Date and Time</button>
+            <label for="time">Select Time:</label>
+            <input type="time" id="time" name="time" value="{{ time or ''}}" required>
+            <br><br>
+            <button type="submit">Submit</button>
         </form>
     </div>
-
-    <h2>Location: {{ address }}</h2>
 
 </body>
 </html>
