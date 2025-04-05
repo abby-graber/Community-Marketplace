@@ -7,8 +7,27 @@
 <body>
     <!-- Header -->
     <header>
+        <img src="{{ url_for('static', filename='images/logo_white.png') }}" alt="Community Marketplace Logo" class="header-logo">
         Community Marketplace - Buy, Sell, Trade
+        <!-- Hamburger Menu Button -->
+        <button class="menu-btn" onclick="openMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </button>
     </header>
+
+    <!-- Sidebar Menu -->
+    <div id="sideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="close-btn" onclick="closeMenu()">&times;</a>
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+        <a href="{{ url_for('listings.my_listings') }}">My Listings</a>
+        <a href="{{ url_for('address.address_page') }}">Schedule a Meeting</a>
+        <a href="{{ url_for('my_meetings.my_meetings_page') }}">My Meetings</a>
+    </div>
+
 
     <!-- Main Content -->
     <div class="container">
@@ -20,7 +39,8 @@
                         <th>Address</th>
                         <th>Date</th>
                         <th>Time</th>
-                        <th>Actions</th>
+                        <th>Edit Meeting</th>
+                        <th>Cancel Meeting</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,13 +50,25 @@
                             <td>{{ meeting.date }}</td>
                             <td>{{ meeting.time }}</td>
                             <td>
-                                <form action="{{ url_for('my_meetings.update_meeting', meeting_id=meeting.id) }}" method="POST" style="display:inline;">
-                                    <button type="submit">Edit</button>
-                                </form>
-                                <form action="{{ url_for('my_meetings.delete_meeting', meeting_id=meeting.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
-                                    <button type="submit">Cancel</button>
+                                <!-- Update Meeting -->
+                                <form id="update-form" action="{{ url_for('my_meetings.update_meeting', meeting_id=meeting.id) }}" method="POST">
+                                    <input type="text" id="addressInput" name="query" class="styled-input" 
+                                    placeholder="Start typing an address..." style="width: 200px; font-size: 14px; padding: 5px"><br>
+                                    <input type="date" id="date" name="date" value="{{ date or ''}}" required 
+                                    style="width: 200px; font-size: 14px; padding: 5px"><br>
+                                    <input type="time" id="time" name="time" value="{{ time or ''}}" required 
+                                    style="width: 200px; font-size: 14px; padding: 5px"><br>
+                                    <button type="submit" onclick="submitUpdate(event)">Apply Changes</button>
                                 </form>
                             </td>
+                            <td>
+                                <!-- Cancel Meeting -->
+                                <form id="delete-form" action="{{ url_for('my_meetings.delete_meeting', meeting_id=meeting.id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                    <button type="submit" onclick="submitDelete(event)">Cancel Meeting</button>
+                                </form>
+                            </td>
+                            <!-- TODO: Get this under the address search bar w/out being in the box -->
+                            <div id="suggestions" style="width: 600px;"></div>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -44,5 +76,98 @@
         {% else %}
             <p>No meetings scheduled.</p>
         {% endif %}
+    </div>
+
+    <script>
+        function openMenu() {
+            document.getElementById("sideMenu").style.width = "250px";
+        }
+
+        function closeMenu() {
+            document.getElementById("sideMenu").style.width = "0";
+        }
+
+        function submitUpdate(event) {
+            event.preventDefault();
+            const form = event.target.form;
+            const action = form.action;
+            const formData = new FormData(form);
+
+            fetch(action, {
+                method: 'PUT',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Update response:", data);
+                alert(data.message || "Update worked but no message.");
+            })
+            .catch(err => console.error("Update failed:", err));
+        }
+
+        function submitDelete(event) {
+            event.preventDefault();
+            const form = event.target.form;
+            const action = form.action;
+
+            fetch(action, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Delete response:", data);
+                alert(data.message || "Delete worked but no message.");
+            })
+            .catch(err => console.error("Delete failed:", err));
+        }
+
+        document.getElementById("addressInput").addEventListener("input", (e) => {
+            getAddressSuggestions(e.target.value);
+        });
+
+        async function getAddressSuggestions(query) {
+            if (!query || query.length < 3) {
+                document.getElementById("suggestions").style.display = "none";
+                return;
+            }
+
+            try {
+                let url = `/address/search_address?query=${encodeURIComponent(query)}`;
+                console.log("Fetching URL:", url); // Debugging
+                let response = await fetch(url);
+
+                if (!response.ok) {
+                    console.error("Error fetching address suggestions:", response.statusText);
+                    return;
+                }
+
+                let data = await response.json();
+                let suggestions = document.getElementById("suggestions");
+                suggestions.innerHTML = "";
+
+                if (data.length === 0) {
+                    console.error("Invalid or unknown location.");
+                    suggestions.style.display = "none";
+                    return;
+                }
+
+                data.forEach(item => {
+                    let div = document.createElement("div");
+                    div.classList.add("suggestion-item");
+                    div.innerText = item.display_name;
+                    div.onclick = () => {
+                        document.getElementById("addressInput").value = item.display_name;
+                        suggestions.style.display = "none";
+                    };
+                    suggestions.appendChild(div);
+                });
+
+                suggestions.style.display = "block";
+            } catch (error) {
+                console.error("Request failed:", error);
+            }
+        }
+    </script>
+
 </body>
 </html>

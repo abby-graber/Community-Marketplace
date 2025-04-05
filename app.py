@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_mysqldb import MySQL
+from flask_mail import Mail, Message
 from routes.listing import listings_bp
 import os
 import config
@@ -22,6 +23,14 @@ app.config['MYSQL_PASSWORD'] = config.MYSQL_CONFIG['password']
 app.config['MYSQL_DB'] = config.MYSQL_CONFIG['database']
 
 mysql = MySQL(app)
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'your_email@gmail.com'
+app.config['MAIL_PASSWORD'] = 'your_app_password'
+
+mail = Mail(app)
 
 MAX_ATTEMPTS = 5
 LOCKOUT_TIME_MINUTES = 5

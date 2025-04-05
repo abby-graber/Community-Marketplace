@@ -8,10 +8,18 @@ body {
 header {
     background-color: #1E3A5F;
     color: white;
-    text-align: center;
+    text-align: left;
     padding: 15px;
     font-size: 24px;
     font-weight: bold;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+}
+
+.header-logo {
+    width: 45px;
+    height: 45px;
 }
 
 h2 {
@@ -132,8 +140,6 @@ button:hover {
     border: none;
     cursor: pointer;
     padding: 0;
-    float: right;
-    margin-right: 20px;
 }
 
 .menu-btn div {

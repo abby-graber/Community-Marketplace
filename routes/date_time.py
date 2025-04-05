@@ -10,7 +10,6 @@ def set_date_time():
     # Get the address from the query parameters
     address = request.args.get('address')
 
-
     if request.method == 'POST':
         # Handle form submission (date and time)
         date = request.form.get('date')
