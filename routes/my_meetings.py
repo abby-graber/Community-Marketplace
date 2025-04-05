@@ -1,5 +1,3 @@
-# Opens database of user meetings - must be logged in
-# endpoints for editing and cancelling meetings
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
 
@@ -8,17 +6,17 @@ meeting_bp = Blueprint('my_meetings', __name__, template_folder="../templates")
 
 mysql = MySQL()
 
-# def login_required(f):
-#     def wrap(*args, **kwargs):
-#         if 'logged_in' not in session:
-#             flash('You need to login first.', 'warning')
-#             return redirect(url_for('login'))
-#         return f(*args, **kwargs)
-#     wrap.__name__ = f.__name__
-#     return wrap
+def login_required(f):
+    def wrap(*args, **kwargs):
+        if 'logged_in' not in session:
+            flash('You need to login first.', 'warning')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    wrap.__name__ = f.__name__
+    return wrap
 
 @meeting_bp.route("/my-meetings", methods=["GET"])
-# @login_required
+@login_required
 def my_meetings_page():
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT id, address, date, time FROM meetings")  # include `id` if needed
@@ -46,7 +44,7 @@ def update_meeting(meeting_id):
         mysql.connection.commit()
         cursor.close()
 
-        return jsonify({'message': f'Meeting #{meeting_id} updated successfully!'})
+        return jsonify({'message': f'Meeting #{meeting_id} update waiting for approval'})
     except Exception as e:
         print("Error during update:", e)
         return jsonify({'error': str(e)})

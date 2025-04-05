@@ -9,18 +9,6 @@
         Set Meeting And Time: 
     </header>
 
-    <div class="flash-messages">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="alert alert-{{ category }}">
-                {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-    </div>      
-
     <div class="container">
         <form method="POST">
             <h2><b>Does the following information look correct?</b></h2>

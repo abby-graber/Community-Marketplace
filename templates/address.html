@@ -81,11 +81,14 @@
                 data.forEach(item => {
                     let div = document.createElement("div");
                     div.classList.add("suggestion-item");
-                    div.innerText = item.display_name;
+
+                    let composedAddress = `${item.street || ''}, ${item.city || ''}, ${item.state || ''} ${item.postcode || ''}`;
+                    div.innerText = composedAddress;
+
                     div.onclick = () => {
-                        document.getElementById("addressInput").value = item.display_name;
+                        document.getElementById("addressInput").value = composedAddress;
                         suggestions.style.display = "none";
-                        window.location.href = `/date-time/set-date-time?address=${encodeURIComponent(item.display_name)}`;
+                        window.location.href = `/date-time/set-date-time?address=${encodeURIComponent(composedAddress)}`;
                     };
                     suggestions.appendChild(div);
                 });
@@ -95,6 +98,7 @@
                 console.error("Request failed:", error);
             }
         }
+
     </script>
 </body>
 </html>
